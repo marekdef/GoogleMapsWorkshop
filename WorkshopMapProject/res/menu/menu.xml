@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:id="@+id/group_main">
+        <item
+                android:id="@+id/search_rout"
+                android:title="@string/search_rout">
+        </item>
+        <item
+                android:id="@+id/clear_map"
+                android:title="@string/clear_map">
+        </item>
+
+    </group>
+</menu>

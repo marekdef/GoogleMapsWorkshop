@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MapActivity</string>
+    <string name="marker_name">Point %1$s</string>
+    <string name="downloading">Please Wait. \n Downloading...</string>
+    <string name="search_rout">Search route</string>
+    <string name="clear_map">Clear map</string>
+    <string name="connections_problem">Connection problem</string>
+    <string name="route_error">Error search route: %1$s</string>
+</resources>
