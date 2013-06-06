@@ -4,24 +4,26 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.mobica.map.R;
+import com.mobica.map.directionsUrl.DirectionsUrl;
 import com.mobica.map.googledirections.GoogleDirectionsResponse;
 import com.mobica.map.uiInterface.GoogleMapsRoutingInterface;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.IOException;
 import java.util.List;
 
 
 public class RoutingConnector extends ConnectorHttp {
 
-    private GoogleDirectionsResponse googleDirectionsResponse;
-    private final AlertDialog sentDialog;
+    private final int OK = 1;
+    private final int ERROR = 0;
+    private GoogleDirectionsResponse mGoogleDirectionsResponse;
+    private final AlertDialog mSentDialog;
     private final GoogleMapsRoutingInterface mGoogleMapsRoutingInterface;
+    private final Context mContext;
 
     /**
      * method create object and show alert and start thread. Response is send by interface
@@ -30,26 +32,33 @@ public class RoutingConnector extends ConnectorHttp {
      */
     public RoutingConnector(Context context, GoogleMapsRoutingInterface googleDirectionsInterface) {
         this.mGoogleMapsRoutingInterface = googleDirectionsInterface;
-        sentDialog = new AlertDialog.Builder(context).create();
-        sentDialog.setTitle(context.getResources().getString(R.string.downloading));
+        this.mContext = context;
+        mSentDialog = new AlertDialog.Builder(context).create();
+        mSentDialog.setTitle(context.getResources().getString(R.string.downloading));
     }
 
     /**
      * @param geoPoints - list of points
      */
     public void startRouting(List<com.mobica.map.googledirections.GeoPoint> geoPoints) {
-        sentDialog.show();
+        mSentDialog.show();
         new RoutingThread(geoPoints).start();
     }
 
+    @SuppressWarnings("OverlyComplexAnonymousInnerClass")
     private final Handler uiHandler = new Handler() {
 
         @Override
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 2:
-                    sentDialog.dismiss();
-                    mGoogleMapsRoutingInterface.getGoogleDirectionsResponse(googleDirectionsResponse);
+                case OK:
+                    mSentDialog.dismiss();
+                    mGoogleMapsRoutingInterface.googleDirectionsResponse(mGoogleDirectionsResponse);
+                    break;
+                case ERROR:
+                    mSentDialog.dismiss();
+                    mGoogleMapsRoutingInterface.googleDirectionsError((String)msg.obj);
+                    break;
                 default:
                     break;
             }
@@ -67,44 +76,31 @@ public class RoutingConnector extends ConnectorHttp {
 
         @Override
         public void run() {
-            String TAG = "RountingConnector";
             try {
-                String googleResponseString = sendHttpGet(getUrl(mGeoPointList));
-                googleDirectionsResponse = new GoogleDirectionsResponse();
-                googleDirectionsResponse = (new Gson()).fromJson(googleResponseString, GoogleDirectionsResponse.class);
+                String googleResponseString = sendHttpGet(DirectionsUrl.getUrl(mContext, mGeoPointList));
+                mGoogleDirectionsResponse = new GoogleDirectionsResponse();
+                mGoogleDirectionsResponse = (new Gson()).fromJson(googleResponseString, GoogleDirectionsResponse.class);
+                uiHandler.sendEmptyMessage(OK);
             } catch (JsonSyntaxException ex) {
-                Log.e(TAG, "parse response google ", ex);
-            } catch (Exception e) {
-                Log.e(TAG, "parse response google ", e);
+                Message msg = new Message();
+                msg.what = ERROR;
+                msg.obj = "Wrong data from server";
+                uiHandler.sendMessage(msg);
+            } catch (IOException e) {
+                Message msg = new Message();
+                msg.what = ERROR;
+                msg.obj = "Problem with connection";
+                uiHandler.sendMessage(msg);
+                uiHandler.sendEmptyMessage(ERROR);
+            }catch (Exception e) {
+                Message msg = new Message();
+                msg.what = ERROR;
+                msg.obj = "Problem with connection";
+                uiHandler.sendMessage(msg);
+                uiHandler.sendEmptyMessage(ERROR);
             }
             super.run();
-            uiHandler.sendEmptyMessage(2);
 
         }
-    }
-
-    private String getUrl(List<com.mobica.map.googledirections.GeoPoint> geoPointst) throws UnsupportedEncodingException {
-        String urlString;
-        urlString = "http://maps.googleapis.com/maps/api/directions/json?";
-        urlString += "&origin=";
-        urlString += Double.toString(geoPointst.get(0).getLat());
-        urlString += ",";
-        urlString += Double.toString(geoPointst.get(0).getLon());
-        urlString += "&destination=";// to
-        urlString += Double.toString(geoPointst.get(geoPointst.size() - 1).getLat());
-        urlString += ",";
-        urlString += Double.toString(geoPointst.get(geoPointst.size() - 1).getLon());
-        if(geoPointst.size() > 2){
-            urlString += "&waypoints=";
-            for(int i = 1; i < (geoPointst.size()-1); i++){
-                urlString += URLEncoder.encode("|", "UTF-8");
-                urlString += Double.toString(geoPointst.get(i).getLat());
-                urlString += ",";
-                urlString += Double.toString(geoPointst.get(i).getLon());
-            }
-        }
-        urlString += "&sensor=false";
-        Log.d("routingConnector", urlString);
-        return urlString;
     }
 }

@@ -1,0 +1,33 @@
+<resources>
+	<string name="pref_settings_avoid_tolls">prefs_settings_avoid_tolls</string>
+	<string name="pref_settings_avoid_highways">prefs_settings_avoid_highways</string>
+	<string name="pref_settings_travel_modes">prefs_settings_travel_modes</string>
+    <string name="pref_settings_map_type">prefs_settings_map_type</string>
+
+    <string name="pref_title_avoid_tolls">Avoid tolls</string>
+    <string name="pref_title_avoid_highways">Avoid highways</string>
+    <string name="pref_title_travel_modes">Travel mode</string>
+    <string name="pref_title_map_type">Map type</string>
+
+    <string-array name="pref_mode_travel_list">
+        <item>none</item>
+        <item>driving</item>
+        <item>walking</item>
+        <item>bicycling</item>
+        <item>transit</item>
+    </string-array>
+
+    <string-array name="pref_map_type">
+        <item>normal</item>
+        <item>satellite</item>
+        <item>terrain</item>
+        <item>hybrid</item>
+    </string-array>
+
+    <string-array name="pref_map_type_value">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+</resources>

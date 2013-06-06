@@ -82,7 +82,7 @@ public class ClusteringMarkers {
                 ArrayList<Marker> markersForPoint = clusters.get(point);
                 Marker mainMarker = markersForPoint.get(0);
                 mainMarker.setVisible(true);
-
+                //TODO dodaj inna ikonę dla klastra. Inna ikona dla markera który można przenosić (drag and drop)
                 if (markersForPoint.size() > 1) {
                     mainMarker.setIcon(drawClusterIcon(Integer.toString(markersForPoint.size())));
                     mainMarker.setDraggable(false);

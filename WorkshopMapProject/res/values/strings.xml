@@ -7,4 +7,7 @@
     <string name="clear_map">Clear map</string>
     <string name="connections_problem">Connection problem</string>
     <string name="route_error">Error search route: %1$s</string>
+    <string name="settings_route">Route settings</string>
+    <string name="none">none</string>
+    <string name="empty_string"/>
 </resources>

@@ -2,6 +2,7 @@ package com.mobica.map;
 
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -15,6 +16,7 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.mobica.map.Preferences.Preferences;
 import com.mobica.map.cluster.ClusteringMarkers;
 import com.mobica.map.googledirections.GeoPoint;
 import com.mobica.map.googledirections.GoogleDirectionsResponse;
@@ -39,6 +41,7 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
     public ClusteringMarkers mClusteringMarkers;
     private RoutingConnector mRoutingConnector;
     private GoogleMap mGoogleMap;
+    private Polyline mPolyline;
 
     static {
         mMarkersShow = new HashMap<String, Integer>();
@@ -73,14 +76,18 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
     }
 
     private void initMap() {
+        //TODO włącz moją pozycję, kompas, oraz obsługe gestów
         mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.getUiSettings().setCompassEnabled(true);
         mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
         mGoogleMap.setMyLocationEnabled(true);
+
+        //TODO dodaj long click ( dodawanie punktu na mapie), drag and drop, klikanie markera oraz odswiezanie mapy po zmianie zooma
         mGoogleMap.setOnCameraChangeListener(new MyOnCameraChangeListener(mGoogleMap));
         mGoogleMap.setOnMarkerClickListener(new MyOnMarkerClickListener(mGoogleMap));
         mGoogleMap.setOnMapLongClickListener(new MyOnMapLongClickListener(mGoogleMap));
         mGoogleMap.setOnMarkerDragListener(new MyOnMarkerDragListener());
+        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
     @Override
@@ -88,6 +95,26 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
         return true;
+    }
+
+    @Override
+    protected void onResume() {
+        //TODO Dodaj do settingsActivity zmianę typu mapy
+        switch (Integer.parseInt(Preferences.getString(getString(R.string.pref_settings_map_type), "0"))){
+            case 0:
+                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                break;
+            case 1:
+                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                break;
+            case 2:
+                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+                break;
+            case 3:
+                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+                break;
+        }
+        super.onResume();
     }
 
     @Override
@@ -105,6 +132,9 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
                 initMap();
                 mMarkers.clear();
                 mMarkersShow.clear();
+                break;
+            case R.id.settings_route:
+                startActivity(new Intent(getApplicationContext(), SettingsRouteActivity.class));
                 break;
             default:
                 break;
@@ -127,17 +157,18 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
         return geoPointList;
     }
 
-    private Polyline mPolyline;
-
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void getGoogleDirectionsResponse(GoogleDirectionsResponse rout) {
+    public void googleDirectionsResponse(GoogleDirectionsResponse rout) {
         if (rout != null) {
             if (rout.getStatus().equalsIgnoreCase("OK")) {
+                //TODO usuń starą trasę
                 if (mPolyline != null) {
                     mPolyline.remove();
                     mPolyline = null;
                 }
+
+                //TODO odrysuj trase
                 PolylineOptions polylineOptions = new PolylineOptions();
                 for (Route route : rout.getRoutes()) {
                     for (int i = 0; i < route.getLegs().size(); i++) {
@@ -150,10 +181,11 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
                     }
                 }
                 mPolyline = mGoogleMap.addPolyline(polylineOptions);
+
+                //TODO ustaw mapę tak aby było widać całą trasę z niewielkim marginesem po bokach
                 LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 GeoPoint northGeoPoint = rout.getRoutes().get(0).getBounds().getNortheast();
                 GeoPoint southGeoPoint = rout.getRoutes().get(0).getBounds().getSouthwest();
-
                 builder.include(new LatLng(northGeoPoint.getLat(), northGeoPoint.getLon()));
                 builder.include(new LatLng(southGeoPoint.getLat(), southGeoPoint.getLon()));
                 LatLngBounds bounds = builder.build();
@@ -164,5 +196,11 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
         } else {
             Toast.makeText(getApplicationContext(), String.format(getString(R.string.route_error), getString(R.string.connections_problem)), Toast.LENGTH_LONG).show();
         }
+    }
+
+    @SuppressWarnings("ConstantConditions")
+    @Override
+    public void googleDirectionsError(String error) {
+        Toast.makeText(getApplicationContext(), error, Toast.LENGTH_LONG).show();
     }
 }
