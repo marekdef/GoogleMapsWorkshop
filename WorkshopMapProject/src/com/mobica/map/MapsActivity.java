@@ -168,7 +168,7 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
                     mPolyline = null;
                 }
 
-                //TODO odrysuj trase
+                //TODO odrysuj trase wykorzystaj obiekt PolylineOptions
                 PolylineOptions polylineOptions = new PolylineOptions();
                 for (Route route : rout.getRoutes()) {
                     for (int i = 0; i < route.getLegs().size(); i++) {
