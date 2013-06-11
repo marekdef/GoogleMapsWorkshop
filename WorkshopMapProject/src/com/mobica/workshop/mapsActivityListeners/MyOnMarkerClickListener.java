@@ -1,10 +1,10 @@
-package com.mobica.map.mapsActivityListeners;
+package com.mobica.workshop.mapsActivityListeners;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.Marker;
-import com.mobica.map.MapsActivity;
-import com.mobica.map.cluster.ClusteringMarkers;
+import com.mobica.workshop.MapsActivity;
+import com.mobica.workshop.cluster.ClusteringMarkers;
 
 /**
  *

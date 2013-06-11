@@ -1,11 +1,11 @@
-package com.mobica.map.mapsActivityListeners;
+package com.mobica.workshop.mapsActivityListeners;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mobica.map.MapsActivity;
-import com.mobica.map.R;
+import com.mobica.workshop.MapsActivity;
+import com.mobica.workshop.R;
 
 /**
  * 

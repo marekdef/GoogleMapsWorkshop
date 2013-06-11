@@ -1,4 +1,4 @@
-package com.mobica.map.location;
+package com.mobica.workshop.location;
 
 import android.content.Context;
 import android.location.Criteria;

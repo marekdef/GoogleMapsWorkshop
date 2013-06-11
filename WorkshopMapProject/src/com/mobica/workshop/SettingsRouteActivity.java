@@ -1,4 +1,4 @@
-package com.mobica.map;
+package com.mobica.workshop;
 
 import java.util.List;
 

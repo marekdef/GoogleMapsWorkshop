@@ -1,4 +1,4 @@
-package com.mobica.map.serverConnection;
+package com.mobica.workshop.serverConnection;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -7,10 +7,10 @@ import android.os.Message;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
-import com.mobica.map.R;
-import com.mobica.map.directionsUrl.DirectionsUrl;
-import com.mobica.map.googledirections.GoogleDirectionsResponse;
-import com.mobica.map.uiInterface.GoogleMapsRoutingInterface;
+import com.mobica.workshop.R;
+import com.mobica.workshop.directionsUrl.DirectionsUrl;
+import com.mobica.workshop.googledirections.GoogleDirectionsResponse;
+import com.mobica.workshop.uiInterface.GoogleMapsRoutingInterface;
 
 import java.io.IOException;
 import java.util.List;
@@ -40,7 +40,7 @@ public class RoutingConnector extends ConnectorHttp {
     /**
      * @param geoPoints - list of points
      */
-    public void startRouting(List<com.mobica.map.googledirections.GeoPoint> geoPoints) {
+    public void startRouting(List<com.mobica.workshop.googledirections.GeoPoint> geoPoints) {
         mSentDialog.show();
         new RoutingThread(geoPoints).start();
     }
@@ -68,9 +68,9 @@ public class RoutingConnector extends ConnectorHttp {
     };
 
     private class RoutingThread extends Thread {
-        private final List<com.mobica.map.googledirections.GeoPoint> mGeoPointList;
+        private final List<com.mobica.workshop.googledirections.GeoPoint> mGeoPointList;
 
-        public RoutingThread(List<com.mobica.map.googledirections.GeoPoint> geoPoints) {
+        public RoutingThread(List<com.mobica.workshop.googledirections.GeoPoint> geoPoints) {
             this.mGeoPointList = geoPoints;
         }
 

@@ -1,4 +1,4 @@
-package com.mobica.map;
+package com.mobica.workshop;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -8,27 +8,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
-import com.mobica.map.Preferences.Preferences;
-import com.mobica.map.cluster.ClusteringMarkers;
-import com.mobica.map.googledirections.GeoPoint;
-import com.mobica.map.googledirections.GoogleDirectionsResponse;
-import com.mobica.map.googledirections.Leg;
-import com.mobica.map.googledirections.Route;
-import com.mobica.map.googledirections.Step;
-import com.mobica.map.mapsActivityListeners.MyOnCameraChangeListener;
-import com.mobica.map.mapsActivityListeners.MyOnMapLongClickListener;
-import com.mobica.map.mapsActivityListeners.MyOnMarkerClickListener;
-import com.mobica.map.mapsActivityListeners.MyOnMarkerDragListener;
-import com.mobica.map.serverConnection.RoutingConnector;
-import com.mobica.map.uiInterface.GoogleMapsRoutingInterface;
+import com.mobica.workshop.Preferences.Preferences;
+import com.mobica.workshop.cluster.ClusteringMarkers;
+import com.mobica.workshop.googledirections.GeoPoint;
+import com.mobica.workshop.googledirections.GoogleDirectionsResponse;
+import com.mobica.workshop.serverConnection.RoutingConnector;
+import com.mobica.workshop.uiInterface.GoogleMapsRoutingInterface;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,23 +60,20 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
         initMap();
         mClusteringMarkers = new ClusteringMarkers(this);
         mClusteringMarkers.checkMarkers(mGoogleMap.getProjection(), mMarkers);
-        // MyLocation myLocation;
-        //  myLocation = new MyLocation(this, mGoogleMap);
     }
 
     private void initMap() {
-        //TODO włącz moją pozycję, kompas, oraz obsługe gestów
-        mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
+        //TODO włącz moją pozycję, kompas, obsługe gestów, przycisk Moja pozycja
+        /*mGoogleMap.getUiSettings().setMyLocationButtonEnabled(true);
         mGoogleMap.getUiSettings().setCompassEnabled(true);
         mGoogleMap.getUiSettings().setAllGesturesEnabled(true);
-        mGoogleMap.setMyLocationEnabled(true);
+        mGoogleMap.setMyLocationEnabled(true);*/
 
-        //TODO dodaj long click ( dodawanie punktu na mapie), drag and drop, klikanie markera oraz odswiezanie mapy po zmianie zooma
-        mGoogleMap.setOnCameraChangeListener(new MyOnCameraChangeListener(mGoogleMap));
+        //TODO Dodaj akcję listenerów  do obsługi zmiany kamery, marker click, long click oraz draggable
+       /* mGoogleMap.setOnCameraChangeListener(new MyOnCameraChangeListener(mGoogleMap));
         mGoogleMap.setOnMarkerClickListener(new MyOnMarkerClickListener(mGoogleMap));
         mGoogleMap.setOnMapLongClickListener(new MyOnMapLongClickListener(mGoogleMap));
-        mGoogleMap.setOnMarkerDragListener(new MyOnMarkerDragListener());
-        mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mGoogleMap.setOnMarkerDragListener(new MyOnMarkerDragListener());*/
     }
 
     @Override
@@ -99,19 +85,19 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
 
     @Override
     protected void onResume() {
-        //TODO Dodaj do settingsActivity zmianę typu mapy
+        //TODO Metode onResume ustaw odpowiedni typ mapy w zależności od otrzymanej wartości
         switch (Integer.parseInt(Preferences.getString(getString(R.string.pref_settings_map_type), "0"))){
-            case 0:
-                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+            case 0://normal
+                //mGoogleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
                 break;
-            case 1:
-                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+            case 1://satellite
+                //mGoogleMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
                 break;
-            case 2:
-                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
+            case 2://terrain
+                //mGoogleMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
                 break;
-            case 3:
-                mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+            case 3://hybrid
+                //mGoogleMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
                 break;
         }
         super.onResume();
@@ -124,10 +110,7 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
                 searchRoute();
                 break;
             case R.id.clear_map:
-                if (mPolyline != null) {
-                    mPolyline.remove();
-                    mPolyline = null;
-                }
+                clearRoute();
                 mGoogleMap.clear();
                 initMap();
                 mMarkers.clear();
@@ -157,39 +140,41 @@ public class MapsActivity extends Activity implements GoogleMapsRoutingInterface
         return geoPointList;
     }
 
+    private void clearRoute(){
+        //TODO usuń starą trasę
+       /*if (mPolyline != null) {
+            mPolyline.remove();
+            mPolyline = null;
+        }*/
+    }
     @SuppressWarnings("ConstantConditions")
     @Override
     public void googleDirectionsResponse(GoogleDirectionsResponse rout) {
         if (rout != null) {
             if (rout.getStatus().equalsIgnoreCase("OK")) {
-                //TODO usuń starą trasę
-                if (mPolyline != null) {
-                    mPolyline.remove();
-                    mPolyline = null;
-                }
-
-                //TODO odrysuj trase wykorzystaj obiekt PolylineOptions
-                PolylineOptions polylineOptions = new PolylineOptions();
+                clearRoute();
+                //TODO Odrysuj trase wykorzystaj obiekt PolylineOptions (współrzędne punktów znajdują się w obiekcie GoogleDirectionsResponse -> Leg -> Step)
+                /*PolylineOptions polylineOptions = new PolylineOptions();
                 for (Route route : rout.getRoutes()) {
                     for (int i = 0; i < route.getLegs().size(); i++) {
                         Leg leg = route.getLegs().get(i);
                         for (Step step : leg.getSteps()) {
                             polylineOptions.add(new LatLng(step.getStartLocation().getLat(), step.getStartLocation().getLon()));
-                            LatLng latLng = new LatLng(step.getEndLocation().getLat(), step.getEndLocation().getLon());
-                            polylineOptions.add(latLng);
+
+                            polylineOptions.add(new LatLng(step.getEndLocation().getLat(), step.getEndLocation().getLon()));
                         }
                     }
                 }
-                mPolyline = mGoogleMap.addPolyline(polylineOptions);
+                mPolyline = mGoogleMap.addPolyline(polylineOptions);*/
 
                 //TODO ustaw mapę tak aby było widać całą trasę z niewielkim marginesem po bokach
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                /*LatLngBounds.Builder builder = new LatLngBounds.Builder();
                 GeoPoint northGeoPoint = rout.getRoutes().get(0).getBounds().getNortheast();
                 GeoPoint southGeoPoint = rout.getRoutes().get(0).getBounds().getSouthwest();
                 builder.include(new LatLng(northGeoPoint.getLat(), northGeoPoint.getLon()));
                 builder.include(new LatLng(southGeoPoint.getLat(), southGeoPoint.getLon()));
                 LatLngBounds bounds = builder.build();
-                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, getResources().getDimensionPixelSize(R.dimen.map_showing_margin)));
+                mGoogleMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, getResources().getDimensionPixelSize(R.dimen.map_showing_margin)));*/
             } else {
                 Toast.makeText(getApplicationContext(), String.format(getString(R.string.route_error), rout.getStatus()), Toast.LENGTH_LONG).show();
             }

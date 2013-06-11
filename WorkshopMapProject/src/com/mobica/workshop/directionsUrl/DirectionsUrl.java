@@ -1,10 +1,10 @@
-package com.mobica.map.directionsUrl;
+package com.mobica.workshop.directionsUrl;
 
 import android.content.Context;
 
-import com.mobica.map.Preferences.Preferences;
-import com.mobica.map.R;
-import com.mobica.map.googledirections.GeoPoint;
+import com.mobica.workshop.Preferences.Preferences;
+import com.mobica.workshop.R;
+import com.mobica.workshop.googledirections.GeoPoint;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -32,7 +32,7 @@ public class DirectionsUrl {
                 DirectionsUrl.getTravelMode(context));
     }
 
-    private static String getWaypoints(Context context, List<com.mobica.map.googledirections.GeoPoint> geoPointst) throws UnsupportedEncodingException {
+    private static String getWaypoints(Context context, List<com.mobica.workshop.googledirections.GeoPoint> geoPointst) throws UnsupportedEncodingException {
         String urlParam = context.getString(R.string.empty_string);
         String latLngFormat = "{0}{1},{2}";
         if (geoPointst.size() > 2) {
@@ -51,7 +51,6 @@ public class DirectionsUrl {
         return urlParam;
     }
 
-    //TODO dodaj do urla ograniczenia w wyszukiwaniu trasy co pomijać. Dodaj opcję do SettingsActivity
     private static String getAvoid(Context context) throws UnsupportedEncodingException {
         String urlParam = context.getString(R.string.empty_string);
         String paramTag = "&avoid=";
@@ -67,7 +66,7 @@ public class DirectionsUrl {
         }
         return urlParam;
     }
-    //TODO dodaj do urla typ podróżowania
+
     private static String getTravelMode(Context context) {
         String urlParam = context.getString(R.string.empty_string);
         String paramTag = "&mode=";

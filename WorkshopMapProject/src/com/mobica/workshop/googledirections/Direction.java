@@ -1,4 +1,4 @@
-package com.mobica.map.googledirections;
+package com.mobica.workshop.googledirections;
 
 import com.google.gson.annotations.SerializedName;
 

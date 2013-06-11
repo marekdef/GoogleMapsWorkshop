@@ -1,9 +1,8 @@
-package com.mobica.map.cluster;
+package com.mobica.workshop.cluster;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Point;
 import android.os.AsyncTask;
@@ -12,14 +11,13 @@ import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Marker;
-import com.mobica.map.MapsActivity;
-import com.mobica.map.R;
+import com.mobica.workshop.MapsActivity;
+import com.mobica.workshop.R;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- *
  * Created by blsu on 04.06.13.
  */
 public class ClusteringMarkers {
@@ -82,8 +80,11 @@ public class ClusteringMarkers {
                 ArrayList<Marker> markersForPoint = clusters.get(point);
                 Marker mainMarker = markersForPoint.get(0);
                 mainMarker.setVisible(true);
-                //TODO dodaj inna ikonę dla klastra. Inna ikona dla markera który można przenosić (drag and drop)
-                if (markersForPoint.size() > 1) {
+                //TODO W klasie ClusteringMarkers dodaj inną ikonę dla Klastra. Ustaw klaster jako nie draggable
+                mainMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+                mainMarker.setDraggable(true);
+                MapsActivity.mMarkersShow.put(mainMarker.getId(), MARKER);
+                /*if (markersForPoint.size() > 1) {
                     mainMarker.setIcon(drawClusterIcon(Integer.toString(markersForPoint.size())));
                     mainMarker.setDraggable(false);
                     MapsActivity.mMarkersShow.put(mainMarker.getId(), CLUSTER);
@@ -91,7 +92,7 @@ public class ClusteringMarkers {
                     mainMarker.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
                     mainMarker.setDraggable(true);
                     MapsActivity.mMarkersShow.put(mainMarker.getId(), MARKER);
-                }
+                }*/
             }
         }
 
@@ -103,7 +104,7 @@ public class ClusteringMarkers {
 
         private Paint getPaint() {
             Paint p = new Paint();
-            p.setTextSize(mContext.getResources().getDimension(R.dimen.cluster_text_size) );
+            p.setTextSize(mContext.getResources().getDimension(R.dimen.cluster_text_size));
             p.setFakeBoldText(true);
             p.setTextAlign(Paint.Align.CENTER);
             p.setColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
@@ -111,9 +112,10 @@ public class ClusteringMarkers {
         }
 
         private Bitmap drawOwnBitmap(String text, Bitmap bmp, Paint paint) {
-            bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);
+            //TODO Dla chętnych: Dodaj ile punktów zawiera kluster
+            /*bmp = bmp.copy(Bitmap.Config.ARGB_8888, true);
             Canvas c = new Canvas(bmp);
-            c.drawText(text, bmp.getWidth() / 2, 2 * bmp.getHeight() / 3, paint);
+            c.drawText(text, bmp.getWidth() / 2, 2 * bmp.getHeight() / 3, paint);*/
             return bmp;
         }
     }

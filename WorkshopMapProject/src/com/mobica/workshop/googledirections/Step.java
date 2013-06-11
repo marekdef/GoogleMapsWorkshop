@@ -1,10 +1,8 @@
-package com.mobica.map.googledirections;
-
-import java.util.List;
+package com.mobica.workshop.googledirections;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Leg {
+public class Step {
 
 	@SerializedName("distance")
 	private Direction distance;
@@ -12,23 +10,20 @@ public class Leg {
 	@SerializedName("duration")
 	private Direction duration;
 	
-	@SerializedName("end_address")
-	private String endAddress;
-	
 	@SerializedName("end_location")
 	private GeoPoint endLocation;
 	
-	@SerializedName("start_address")
-	private String startAddress;
+	@SerializedName("html_instructions")
+	private String htmlInstrukctions;
 	
 	@SerializedName("start_location")
 	private GeoPoint startLocation;
 	
-	@SerializedName("steps")
-	private List<Step> steps;
-	
-	//@SerializedName("via_waypoint")
-	private List<String> viaWaypoint;
+	@SerializedName("travel_mode")
+	private String travelMode;
+
+    @SerializedName("polyline")
+    private OverviewPolyline overviewPolyline;
 
 	public Direction getDistance() {
 		return distance;
@@ -46,14 +41,6 @@ public class Leg {
 		this.duration = duration;
 	}
 
-	public String getEndAddress() {
-		return endAddress;
-	}
-
-	public void setEndAddress(String endAddress) {
-		this.endAddress = endAddress;
-	}
-
 	public GeoPoint getEndLocation() {
 		return endLocation;
 	}
@@ -62,12 +49,12 @@ public class Leg {
 		this.endLocation = endLocation;
 	}
 
-	public String getStartAddress() {
-		return startAddress;
+	public String getHtmlInstrukctions() {
+		return htmlInstrukctions;
 	}
 
-	public void setStartAddress(String startAddress) {
-		this.startAddress = startAddress;
+	public void setHtmlInstrukctions(String htmlInstrukctions) {
+		this.htmlInstrukctions = htmlInstrukctions;
 	}
 
 	public GeoPoint getStartLocation() {
@@ -78,19 +65,19 @@ public class Leg {
 		this.startLocation = startLocation;
 	}
 
-	public List<Step> getSteps() {
-		return steps;
+	public String getTravelMode() {
+		return travelMode;
 	}
 
-	public void setSteps(List<Step> steps) {
-		this.steps = steps;
+	public void setTravelMode(String travelMode) {
+		this.travelMode = travelMode;
 	}
 
-	public List<String> getViaWaypoint() {
-		return viaWaypoint;
-	}
+    public OverviewPolyline getOverviewPolyline() {
+        return overviewPolyline;
+    }
 
-	public void setViaWaypoint(List<String> viaWaypoint) {
-		this.viaWaypoint = viaWaypoint;
-	}
+    public void setOverviewPolyline(OverviewPolyline overviewPolyline) {
+        this.overviewPolyline = overviewPolyline;
+    }
 }

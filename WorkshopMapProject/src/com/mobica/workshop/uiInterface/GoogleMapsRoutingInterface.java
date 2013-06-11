@@ -1,6 +1,6 @@
-package com.mobica.map.uiInterface;
+package com.mobica.workshop.uiInterface;
 
-import com.mobica.map.googledirections.GoogleDirectionsResponse;
+import com.mobica.workshop.googledirections.GoogleDirectionsResponse;
 
 public interface GoogleMapsRoutingInterface {
 

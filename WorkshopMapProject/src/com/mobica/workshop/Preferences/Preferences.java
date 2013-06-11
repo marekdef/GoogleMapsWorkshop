@@ -1,9 +1,9 @@
-package com.mobica.map.Preferences;
+package com.mobica.workshop.Preferences;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.mobica.map.MapsActivity;
+import com.mobica.workshop.MapsActivity;
 
 public class Preferences {
 
